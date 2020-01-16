@@ -1,6 +1,10 @@
 import requests
 from telegram.ext import (Updater, CommandHandler)
 from github import Github
+from flask import request
+from flask import Flask
+from flask import jsonify
+from flask_ngrok import run_with_ngrok
 import json 
 import time
 import keys
@@ -10,8 +14,23 @@ import datetime
 #Written by Jad El-Khatib 
 
 currentDT = datetime.datetime.now()
+
+app = Flask(__name__)
+run_with_ngrok(app)
+
+@app.route("/", methods =['POST'])        # Standard Flask endpoint
+def hello_world():
+    if request.method == 'POST':
+        tgBot.sendMessage(bot)
+        return "Hello, World!"
+    
+
 class tgBot(object):
     
+    def sendMessage(self):
+        print("Im here!")
+        return
+
     def __init__(self):
         super(tgBot, self).__init__()
         
@@ -38,31 +57,17 @@ class tgBot(object):
         #Sends the help message to the user
         bot.sendMessage(self.chat_id, message)
     
-        for repo in self.auth.get_user().get_repos():
-            bot.sendMessage(self.chat_id,repo.name)
-    
+        #for repo in self.auth.get_user().get_repos():
+        #bot.sendMessage(self.chat_id,repo.name)
+        
+        #run the flask app for web hooks
+        app.run()
+        
         return 
-    
-        
-    def help(self,bot,update): 
-    
-        #Pull chat ID
-        chat_id = update.message.chat_id
-            
-        #Initialize message
-        message = "This bot grabs repo commit updates and pushes them to Telegram"
-        
-        #Sends the help message to the user
-        bot.sendMessage(chat_id, message)
-        
-        return
-    
-    
-     
+ 
     #Initializes the telegram bot and listens for a command
     def main(self):
         #Creating Handler
-        self.dp.add_handler(CommandHandler('help',self.help))
         self.dp.add_handler(CommandHandler('start',self.start))
         
         #Start polling
@@ -72,6 +77,8 @@ class tgBot(object):
 if __name__ == '__main__':
     bot = tgBot()
     bot.main()
+
+    
 
 
 
