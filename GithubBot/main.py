@@ -5,6 +5,8 @@ from flask import request
 from flask import Flask
 from flask import jsonify
 from flask_ngrok import run_with_ngrok
+from github_webhook import Webhook
+import telegram
 import json 
 import time
 import keys
@@ -16,20 +18,36 @@ import datetime
 currentDT = datetime.datetime.now()
 
 app = Flask(__name__)
+webhook = Webhook(app)
 run_with_ngrok(app)
 
 @app.route("/", methods =['POST'])        # Standard Flask endpoint
 def hello_world():
-    if request.method == 'POST':
-        tgBot.sendMessage(bot)
-        return "Hello, World!"
-    
+    return "Hello, World!"
 
+@webhook.hook()        # Defines a handler for the 'push' event
+def on_push(data):
+    print("Hello")
+    print("Got push with: {0}".format(data)) 
+    #tgBot.messageSender(bot,data)
+  
+#Format the json for the users
+def messageFormattar(self,data):
+        
+        text = data
+        
+        return text
+    
 class tgBot(object):
     
-    def sendMessage(self):
-        print("Im here!")
+    def messageSender(self,data):
+        bot = telegram.Bot(keys.botKey)
+        
+        text = messageFormattar(data)
+        bot.sendMessage(self.chat_id, text)
         return
+
+    
 
     def __init__(self):
         super(tgBot, self).__init__()
