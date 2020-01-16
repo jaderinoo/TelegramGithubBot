@@ -1,5 +1,6 @@
-from requests import Session
+import requests
 from telegram.ext import (Updater, CommandHandler)
+from github import Github
 import json 
 import time
 import keys
@@ -9,55 +10,68 @@ import datetime
 #Written by Jad El-Khatib 
 
 currentDT = datetime.datetime.now()
-
-def start(bot,update): 
+class tgBot(object):
     
-    #chatID
-    chat_id = update.message.chat_id
-    
-    #Pull chat ID
-    chatID = str(chat_id)
-    
-    print("----------------------\nBot started at: ")
-    print(datetime.datetime.now())
-    print("----------------------")
-
-    #Initialize message
-    message = "Bot has been initialized"
-    
-    #Sends the help message to the user
-    bot.sendMessage(chat_id, message)
-
-    return 
-
-def help(bot,update): 
-
-    #Pull chat ID
-    chat_id = update.message.chat_id
+    def __init__(self):
+        super(tgBot, self).__init__()
         
-    #Initialize message
-    message = "This bot grabs repo commit updates and pushes them to Telegram"
+        #initialize updaters
+        self.updater = Updater(keys.botKey)     
+        self.dp = self.updater.dispatcher
     
-    #Sends the help message to the user
-    bot.sendMessage(chat_id, message)
+        #pull github related data
+        self.auth = Github(keys.githubKey);
+        self.repoList = keys.repoList
+        
+    def start(self,bot,update):     
+        
+        #save the chatID
+        self.chat_id = update.message.chat_id
+        
+        print("----------------------\nBot started at: ")
+        print(datetime.datetime.now())
+        print("----------------------")
     
-    return
-
-#Initializes the telegram bot and listens for a command
-def main():
-    updater = Updater(keys.botKey)     
-    dp = updater.dispatcher
+        #Initialize message
+        message = "Bot has been initialized"
+        
+        #Sends the help message to the user
+        bot.sendMessage(self.chat_id, message)
     
-    #Creating Handler
-    dp.add_handler(CommandHandler('help',help))
-    dp.add_handler(CommandHandler('start',start))
+        for repo in self.auth.get_user().get_repos():
+            print(repo.name)
     
-    #Start polling
-    updater.start_polling()
-    updater.idle()
+        return 
+    
+        
+    def help(self,bot,update): 
+    
+        #Pull chat ID
+        chat_id = update.message.chat_id
+            
+        #Initialize message
+        message = "This bot grabs repo commit updates and pushes them to Telegram"
+        
+        #Sends the help message to the user
+        bot.sendMessage(chat_id, message)
+        
+        return
+    
+    
+     
+    #Initializes the telegram bot and listens for a command
+    def main(self):
+        #Creating Handler
+        self.dp.add_handler(CommandHandler('help',self.help))
+        self.dp.add_handler(CommandHandler('start',self.start))
+        
+        #Start polling
+        self.updater.start_polling()
+        self.updater.idle()
     
 if __name__ == '__main__':
-    main()
+    bot = tgBot()
+    bot.main()
 
 
 

@@ -2,10 +2,9 @@
 botKey = ""
 
 #Github credentials 
-githubUsername = ""
-githubPassword = ""
+githubKey = ""
 
 # A list of repos that the bot will watch over and listen to
 repoList = {
- "localName" : {"owner": "", "repo": "", "branch" : ""}
+ "repoName" : {"user": "", "repo": "", "branch" : ""}
 }
