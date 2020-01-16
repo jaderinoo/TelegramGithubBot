@@ -20,7 +20,7 @@ class tgBot(object):
         self.dp = self.updater.dispatcher
     
         #pull github related data
-        self.auth = Github(keys.githubKey);
+        self.auth = Github(keys.githubUsername, keys.githubPassword)
         self.repoList = keys.repoList
         
     def start(self,bot,update):     
@@ -39,7 +39,7 @@ class tgBot(object):
         bot.sendMessage(self.chat_id, message)
     
         for repo in self.auth.get_user().get_repos():
-            print(repo.name)
+            bot.sendMessage(self.chat_id,repo.name)
     
         return 
     
