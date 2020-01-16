@@ -21,29 +21,33 @@ app = Flask(__name__)
 webhook = Webhook(app)
 run_with_ngrok(app)
 
-@app.route("/", methods =['POST'])        # Standard Flask endpoint
+@app.route("/", methods =['POST'])     
 def hello_world():
-    return "Hello, World!"
+    request_data = request.get_json()
+    tgBot.messageSender(bot,request_data)
+    return "Received and sent"
 
-@webhook.hook()        # Defines a handler for the 'push' event
-def on_push(data):
-    print("Hello")
-    print("Got push with: {0}".format(data)) 
-    #tgBot.messageSender(bot,data)
+    
   
 #Format the json for the users
-def messageFormattar(self,data):
-        
-        text = data
-        
-        return text
+def messageFormattar(request_data):
+    
+    origin = json.dumps(request_data)
+    data = json.loads(origin)
+
+    repoName = data['repository']['name']
+    
+    text = repoName
+    return text
     
 class tgBot(object):
     
-    def messageSender(self,data):
+    def messageSender(self,request_data):
+        
         bot = telegram.Bot(keys.botKey)
         
-        text = messageFormattar(data)
+        text = messageFormattar(request_data)
+        
         bot.sendMessage(self.chat_id, text)
         return
 
