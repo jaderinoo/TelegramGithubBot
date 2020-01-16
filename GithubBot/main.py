@@ -1,14 +1,10 @@
-import requests
 from telegram.ext import (Updater, CommandHandler)
-from github import Github
 from flask import request
 from flask import Flask
-from flask import jsonify
 from flask_ngrok import run_with_ngrok
 from github_webhook import Webhook
 import telegram
 import json 
-import time
 import keys
 import datetime
 
@@ -59,10 +55,6 @@ class tgBot(object):
         #initialize updaters
         self.updater = Updater(keys.botKey)     
         self.dp = self.updater.dispatcher
-    
-        #pull github related data
-        self.auth = Github(keys.githubUsername, keys.githubPassword)
-        self.repoList = keys.repoList
         
     def start(self,bot,update):     
         
@@ -78,11 +70,8 @@ class tgBot(object):
         
         #Sends the help message to the user
         bot.sendMessage(self.chat_id, message)
-    
-        #for repo in self.auth.get_user().get_repos():
-        #bot.sendMessage(self.chat_id,repo.name)
-        
-        #run the flask app for web hooks
+
+        #Run the flask instance
         app.run()
         
         return 
