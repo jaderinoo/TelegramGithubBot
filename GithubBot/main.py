@@ -18,8 +18,17 @@ run_with_ngrok(app)
 @app.route("/", methods =['POST'])     
 def hello_world():
     request_data = request.get_json()
-    tgBot.messageSender(bot,request_data)
-    return "Received and sent"
+    event_type = request.headers["X-GitHub-Event"]
+    
+    if event_type == "push":
+        tgBot.messageSender(bot,request_data)
+        return "Received and sent"
+    
+    if event_type == "ping":
+        print("ping")
+        return "Ping"
+    
+    return "event_type invalid"
   
 #Format the json for the users
 def messageFormattar(request_data):
