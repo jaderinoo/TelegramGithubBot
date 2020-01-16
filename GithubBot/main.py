@@ -2,7 +2,6 @@ from telegram.ext import (Updater, CommandHandler)
 from flask import request
 from flask import Flask
 from flask_ngrok import run_with_ngrok
-from github_webhook import Webhook
 import telegram
 import json 
 import keys
@@ -14,7 +13,6 @@ import datetime
 currentDT = datetime.datetime.now()
 
 app = Flask(__name__)
-webhook = Webhook(app)
 run_with_ngrok(app)
 
 @app.route("/", methods =['POST'])     
@@ -22,8 +20,6 @@ def hello_world():
     request_data = request.get_json()
     tgBot.messageSender(bot,request_data)
     return "Received and sent"
-
-    
   
 #Format the json for the users
 def messageFormattar(request_data):
@@ -32,8 +28,15 @@ def messageFormattar(request_data):
     data = json.loads(origin)
 
     repoName = data['repository']['name']
+    repoUrl = data['repository']['html_url']
+    commitUrl = data['head_commit']['url']
+    timeStamp = data['head_commit']['timestamp']
+    committer = data['head_commit']['author']['username']
+    commitMessage = data['head_commit']['message']
     
-    text = repoName
+    text = "*Github activity alert!* \nRepository: [" + repoName + "](" + repoUrl + ")\nCommit By: " + committer + "\nCommit message: " + commitMessage + "\n[Commit info](" + commitUrl + ")\n\nTimestamp: " + timeStamp
+
+    
     return text
     
 class tgBot(object):
@@ -44,7 +47,7 @@ class tgBot(object):
         
         text = messageFormattar(request_data)
         
-        bot.sendMessage(self.chat_id, text)
+        bot.sendMessage(self.chat_id, text, 'Markdown')
         return
 
     
