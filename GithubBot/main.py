@@ -32,6 +32,14 @@ def hello_world():
         tgBot.messageSender(bot,request_data,"create")
         return "Create"
     
+    if event_type == "issues":
+        tgBot.messageSender(bot,request_data,"issues")
+        return "Create"
+    
+    if event_type == "issue_comment":
+        tgBot.messageSender(bot,request_data,"issue_comment")
+        return "Create"
+    
     return "event_type invalid"
   
 #Format the json for the users
@@ -49,15 +57,46 @@ def messageFormattar(request_data,event_type):
         committer = data['head_commit']['author']['username']
         commitMessage = data['head_commit']['message']
         
-        text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n[Commit info](" + commitUrl + ")\n\nTimestamp: " + timeStamp
+        text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
 
     if event_type == "create":
+        timeStamp = data['head_commit']['timestamp']
         repoName = data['repository']['name']
         repoUrl = data['repository']['html_url']
         branchName = data['ref']
         branchCreator = data['sender']['login']
         
-        text = "*Github activity alert!* \nType: New Branch Created\nRepository: [" + repoName + "](" + repoUrl + ")\nNew branch name: " + branchName + "\nBranch created by: " + branchCreator
+        text = "*Github activity alert!* \nType: New Branch was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nNew branch name: " + branchName + "\nBranch created by: " + branchCreator + "\n\nTimestamp: " + timeStamp
+    
+    if event_type == "issues":
+        issueStatus = data['action']
+        repoName = data['repository']['name']
+        repoUrl = data['repository']['html_url']
+        issuer = data['sender']['login']
+        issueTitle = data['issue']['title']
+        issueUrl = data['issue']['html_url']
+        
+        if issueStatus == "opened":
+            timeStampOpened = data['issue']['created_at']
+            text = "*Github activity alert!* \nType: New Issue was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue created by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampOpened
+        
+        if issueStatus == "closed":
+            timeStampClosed = data['issue']['closed_at']
+            text = "*Github activity alert!* \nType: Old Issue was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue closed by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampClosed
+        
+        
+    if event_type == "issue_comment":
+        repoName = data['repository']['name']
+        repoName = data['repository']['name']
+        repoUrl = data['repository']['html_url']
+        issuer = data['sender']['login']
+        issueTitle = data['issue']['title']
+        issueUrl = data['issue']['html_url']
+        issueComment = data['issue']['body']
+        timeStamp = data['issue']['updated_at']
+        
+        text = "*Github activity alert!* \nType: New Issue Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue updated by: " + issuer + "\nIssue Comment: " + issueComment + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStamp
+        
         
     return text
     
