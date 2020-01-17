@@ -21,40 +21,53 @@ def hello_world():
     event_type = request.headers["X-GitHub-Event"]
     
     if event_type == "push":
-        tgBot.messageSender(bot,request_data)
+        tgBot.messageSender(bot,request_data,"push")
         return "Received and sent"
     
     if event_type == "ping":
         print("ping")
         return "Ping"
     
+    if event_type == "create":
+        tgBot.messageSender(bot,request_data,"create")
+        return "Create"
+    
     return "event_type invalid"
   
 #Format the json for the users
-def messageFormattar(request_data):
+def messageFormattar(request_data,event_type):
     
     origin = json.dumps(request_data)
     data = json.loads(origin)
 
-    repoName = data['repository']['name']
-    repoUrl = data['repository']['html_url']
-    commitUrl = data['head_commit']['url']
-    timeStamp = data['head_commit']['timestamp']
-    committer = data['head_commit']['author']['username']
-    commitMessage = data['head_commit']['message']
-    
-    text = "*Github activity alert!* \nRepository: [" + repoName + "](" + repoUrl + ")\nCommit By: " + committer + "\nCommit message: " + commitMessage + "\n[Commit info](" + commitUrl + ")\n\nTimestamp: " + timeStamp
+    if event_type == "push":
+        repoName = data['repository']['name']
+        repoUrl = data['repository']['html_url']
+        branchName = data['ref']
+        commitUrl = data['head_commit']['url']
+        timeStamp = data['head_commit']['timestamp']
+        committer = data['head_commit']['author']['username']
+        commitMessage = data['head_commit']['message']
+        
+        text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n[Commit info](" + commitUrl + ")\n\nTimestamp: " + timeStamp
 
-    
+    if event_type == "create":
+        repoName = data['repository']['name']
+        repoUrl = data['repository']['html_url']
+        branchName = data['ref']
+        branchCreator = data['sender']['login']
+        
+        text = "*Github activity alert!* \nType: New Branch Created\nRepository: [" + repoName + "](" + repoUrl + ")\nNew branch name: " + branchName + "\nBranch created by: " + branchCreator
+        
     return text
     
 class tgBot(object):
     
-    def messageSender(self,request_data):
+    def messageSender(self,request_data,event_type):
         
         bot = telegram.Bot(keys.botKey)
         
-        text = messageFormattar(request_data)
+        text = messageFormattar(request_data,event_type)
         
         bot.sendMessage(self.chat_id, text, 'Markdown')
         return
