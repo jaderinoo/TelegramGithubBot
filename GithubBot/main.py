@@ -57,10 +57,10 @@ def messageFormattar(request_data,event_type):
         committer = data['head_commit']['author']['username']
         commitMessage = data['head_commit']['message']
         
-        text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
+        text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
 
     if event_type == "create":
-        timeStamp = data['head_commit']['timestamp']
+        timeStamp = data['repository']['pushed_at']
         repoName = data['repository']['name']
         repoUrl = data['repository']['html_url']
         branchName = data['ref']
