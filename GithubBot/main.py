@@ -16,13 +16,17 @@ app = Flask(__name__)
 run_with_ngrok(app)
 
 @app.route("/", methods =['POST'])     
-def hello_world():
+def listener():
     request_data = request.get_json()
     event_type = request.headers["X-GitHub-Event"]
     
     if event_type == "push":
         tgBot.messageSender(bot,request_data,"push")
-        return "Received and sent"
+        return "Commit"
+    
+    if event_type == "commit_comment":
+        tgBot.messageSender(bot,request_data,"commit_comment")
+        return "Commit Comment"
     
     if event_type == "ping":
         print("ping")
@@ -34,11 +38,15 @@ def hello_world():
     
     if event_type == "issues":
         tgBot.messageSender(bot,request_data,"issues")
-        return "Create"
+        return "Issue"
     
     if event_type == "issue_comment":
         tgBot.messageSender(bot,request_data,"issue_comment")
-        return "Create"
+        return "Issue Comment"
+    
+    if event_type == "pull_request":
+        tgBot.messageSender(bot,request_data,"pull_request")
+        return "Pull Request"
     
     return "event_type invalid"
   
@@ -59,6 +67,17 @@ def messageFormattar(request_data,event_type):
         
         text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
 
+    if event_type == "commit_comment":
+        repoName = data['repository']['name']
+        repoName = data['repository']['name']
+        repoUrl = data['repository']['html_url']
+        issuer = data['sender']['login']
+        commentUrl = data['comment']['html_url']
+        commentComment = data['comment']['body']
+        timeStamp = data['comment']['updated_at']
+        
+        text = "*Github activity alert!* \nType: New Commit Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nCommit thread updated by: " + issuer + "\nThread Comment: " + commentComment + "\n\n[Thread info](" + commentUrl + ")\nTimestamp: " + timeStamp
+     
     if event_type == "create":
         timeStamp = data['repository']['pushed_at']
         repoName = data['repository']['name']
@@ -95,8 +114,23 @@ def messageFormattar(request_data,event_type):
         issueComment = data['issue']['body']
         timeStamp = data['issue']['updated_at']
         
-        text = "*Github activity alert!* \nType: New Issue Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue updated by: " + issuer + "\nIssue Comment: " + issueComment + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStamp
+        text = "*Github activity alert!* \nType: New Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nThread Title: " + issueTitle + "\nThread updated by: " + issuer + "\nThread Comment: " + issueComment + "\n\n[Thread info](" + issueUrl + ")\nTimestamp: " + timeStamp
+     
+    if event_type == "pull_request":
+        pullStatus = data['action']
+        repoName = data['repository']['name']
+        repoUrl = data['repository']['html_url']
+        requester = data['sender']['login']
+        issueTitle = data['pull_request']['title']
+        issueUrl = data['pull_request']['html_url']   
         
+        if pullStatus == "opened":
+            timeStampOpened = data['pull_request']['created_at']
+            text = "*Github activity alert!* \nType: New Pull Request was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nPull Title: " + issueTitle + "\nPull created by: " + requester + "\n\n[Pull info](" + issueUrl + ")\nTimestamp: " + timeStampOpened
+        
+        if pullStatus == "closed":
+            timeStampClosed = data['pull_request']['closed_at']
+            text = "*Github activity alert!* \nType: Old Pull Request was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nPull Title: " + issueTitle + "\nPull closed by: " + requester + "\n\n[Pull info](" + issueUrl + ")\nTimestamp: " + timeStampClosed
         
     return text
     
