@@ -1,7 +1,6 @@
 from telegram.ext import (Updater, CommandHandler)
 from flask import request
 from flask import Flask
-from flask_ngrok import run_with_ngrok
 import telegram
 import json 
 import keys
@@ -12,8 +11,7 @@ import datetime
 
 currentDT = datetime.datetime.now()
 
-app = Flask(__name__)
-run_with_ngrok(app)
+app = Flask(__name__, instance_relative_config=True)
 
 @app.route("/", methods =['POST'])     
 def listener():
@@ -57,16 +55,26 @@ def messageFormattar(request_data,event_type):
     data = json.loads(origin)
 
     if event_type == "push":
-        repoName = data['repository']['name']
-        repoUrl = data['repository']['html_url']
-        branchName = data['ref']
-        commitUrl = data['head_commit']['url']
-        timeStamp = data['head_commit']['timestamp']
-        committer = data['head_commit']['author']['username']
-        commitMessage = data['head_commit']['message']
         
-        text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
-
+        if data['after'] != "0000000000000000000000000000000000000000":
+            repoName = data['repository']['name']
+            repoUrl = data['repository']['html_url']
+            branchName = data['ref']
+            commitUrl = data['head_commit']['url']
+            timeStamp = data['head_commit']['timestamp']
+            committer = data['head_commit']['author']['username']
+            commitMessage = data['head_commit']['message']
+            
+            text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
+        else:
+            repoName = data['repository']['name']
+            repoUrl = data['repository']['html_url']
+            branchName = data['ref']
+            timeStamp = data['repository']['updated_at']
+            branchCloser = data['sender']['login']
+            
+            text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp
+    
     if event_type == "commit_comment":
         repoName = data['repository']['name']
         repoName = data['repository']['name']
