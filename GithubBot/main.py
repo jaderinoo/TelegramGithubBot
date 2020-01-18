@@ -6,7 +6,7 @@ import json
 import keys
 import datetime
 
-#Coinmarketcap based Crypto price bot
+#Github webhook info grabber for Telegram
 #Written by Jad El-Khatib 
 
 currentDT = datetime.datetime.now()
@@ -63,7 +63,7 @@ def messageFormattar(request_data,event_type):
             commitUrl = data['head_commit']['url']
             timeStamp = data['head_commit']['timestamp']
             committer = data['head_commit']['author']['username']
-            commitMessage = data['head_commit']['message']
+            commitMessage = data['head_commit']['message'].replace("_", " ")
             
             text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
         else:
@@ -75,14 +75,13 @@ def messageFormattar(request_data,event_type):
             
             text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp
     
-    
     if event_type == "commit_comment":
         repoName = data['repository']['name']
         repoName = data['repository']['name']
         repoUrl = data['repository']['html_url']
         issuer = data['sender']['login']
         commentUrl = data['comment']['html_url']
-        commentComment = data['comment']['body']
+        commentComment = data['comment']['body'].replace("_", " ")
         timeStamp = data['comment']['updated_at']
         
         text = "*Github activity alert!* \nType: New Commit Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nCommit thread updated by: " + issuer + "\nThread Comment: " + commentComment + "\n\n[Thread info](" + commentUrl + ")\nTimestamp: " + timeStamp
@@ -111,8 +110,7 @@ def messageFormattar(request_data,event_type):
         if issueStatus == "closed":
             timeStampClosed = data['issue']['closed_at']
             text = "*Github activity alert!* \nType: Old Issue was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue closed by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampClosed
-        
-        
+         
     if event_type == "issue_comment":
         repoName = data['repository']['name']
         repoName = data['repository']['name']
@@ -120,7 +118,7 @@ def messageFormattar(request_data,event_type):
         issuer = data['sender']['login']
         issueTitle = data['issue']['title']
         issueUrl = data['issue']['html_url']
-        issueComment = data['issue']['body']
+        issueComment = data['issue']['body'].replace("_", " ")
         timeStamp = data['issue']['updated_at']
         
         text = "*Github activity alert!* \nType: New Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nThread Title: " + issueTitle + "\nThread updated by: " + issuer + "\nThread Comment: " + issueComment + "\n\n[Thread info](" + issueUrl + ")\nTimestamp: " + timeStamp
@@ -153,8 +151,6 @@ class tgBot(object):
         
         bot.sendMessage(self.chat_id, text, 'Markdown')
         return
-
-    
 
     def __init__(self):
         super(tgBot, self).__init__()
