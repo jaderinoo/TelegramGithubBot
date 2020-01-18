@@ -3,8 +3,8 @@ from flask import request
 from flask import Flask
 import telegram
 import json 
-import keys
 import datetime
+import keys
 
 #Github webhook info grabber for Telegram
 #Written by Jad El-Khatib 
@@ -175,7 +175,7 @@ class tgBot(object):
         bot.sendMessage(self.chat_id, message)
 
         #Run the flask instance
-        app.run()
+        app.run(keys.flaskHost,keys.flaskPort)
         
         return 
  
