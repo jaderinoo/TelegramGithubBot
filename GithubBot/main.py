@@ -75,6 +75,7 @@ def messageFormattar(request_data,event_type):
             
             text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp
     
+    
     if event_type == "commit_comment":
         repoName = data['repository']['name']
         repoName = data['repository']['name']
