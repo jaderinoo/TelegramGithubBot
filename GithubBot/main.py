@@ -61,19 +61,19 @@ def messageFormattar(request_data,event_type):
             repoUrl = data['repository']['html_url']
             branchName = data['ref']
             commitUrl = data['head_commit']['url']
-            timeStamp = data['head_commit']['timestamp']
+            timeStamp = data['head_commit']['timestamp'].replace("T", " / ")
             committer = data['head_commit']['author']['username']
             commitMessage = data['head_commit']['message'].replace("_", " ")
             
-            text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp
+            text = "*Github activity alert!* \nType: Commit/Push\nRepository: [" + repoName + "](" + repoUrl + ") / Branch: " + branchName[11:] + "\nCommit by: " + committer + "\nCommit message: " + commitMessage + "\n\n[Commit info](" + commitUrl + ")\nTimestamp: " + timeStamp[:-6]
         else:
             repoName = data['repository']['name']
             repoUrl = data['repository']['html_url']
             branchName = data['ref']
-            timeStamp = data['repository']['updated_at']
+            timeStamp = data['repository']['updated_at'].replace("T", " / ")
             branchCloser = data['sender']['login']
             
-            text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp
+            text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp[:-6]
     
     if event_type == "commit_comment":
         repoName = data['repository']['name']
@@ -82,18 +82,18 @@ def messageFormattar(request_data,event_type):
         issuer = data['sender']['login']
         commentUrl = data['comment']['html_url']
         commentComment = data['comment']['body'].replace("_", " ")
-        timeStamp = data['comment']['updated_at']
+        timeStamp = data['comment']['updated_at'].replace("T", " / ")
         
-        text = "*Github activity alert!* \nType: New Commit Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nCommit thread updated by: " + issuer + "\nThread Comment: " + commentComment + "\n\n[Thread info](" + commentUrl + ")\nTimestamp: " + timeStamp
+        text = "*Github activity alert!* \nType: New Commit Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nCommit thread updated by: " + issuer + "\nThread Comment: " + commentComment + "\n\n[Thread info](" + commentUrl + ")\nTimestamp: " + timeStamp[:-1]
      
     if event_type == "create":
-        timeStamp = data['repository']['pushed_at']
+        timeStamp = data['repository']['pushed_at'].replace("T", " / ")
         repoName = data['repository']['name']
         repoUrl = data['repository']['html_url']
         branchName = data['ref']
         branchCreator = data['sender']['login']
         
-        text = "*Github activity alert!* \nType: New Branch was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nNew branch name: " + branchName + "\nBranch created by: " + branchCreator + "\n\nTimestamp: " + timeStamp
+        text = "*Github activity alert!* \nType: New Branch was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nNew branch name: " + branchName + "\nBranch created by: " + branchCreator + "\n\nTimestamp: " + timeStamp[:-1]
     
     if event_type == "issues":
         issueStatus = data['action']
@@ -104,12 +104,12 @@ def messageFormattar(request_data,event_type):
         issueUrl = data['issue']['html_url']
         
         if issueStatus == "opened":
-            timeStampOpened = data['issue']['created_at']
-            text = "*Github activity alert!* \nType: New Issue was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue created by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampOpened
+            timeStampOpened = data['issue']['created_at'].replace("T", " / ")
+            text = "*Github activity alert!* \nType: New Issue was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue created by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampOpened[:-1]
         
         if issueStatus == "closed":
-            timeStampClosed = data['issue']['closed_at']
-            text = "*Github activity alert!* \nType: Old Issue was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue closed by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampClosed
+            timeStampClosed = data['issue']['closed_at'].replace("T", " / ")
+            text = "*Github activity alert!* \nType: Old Issue was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nIssue Title: " + issueTitle + "\nIssue closed by: " + issuer + "\n\n[Issue info](" + issueUrl + ")\nTimestamp: " + timeStampClosed[:-1]
          
     if event_type == "issue_comment":
         repoName = data['repository']['name']
@@ -119,9 +119,9 @@ def messageFormattar(request_data,event_type):
         issueTitle = data['issue']['title']
         issueUrl = data['issue']['html_url']
         issueComment = data['issue']['body'].replace("_", " ")
-        timeStamp = data['issue']['updated_at']
+        timeStamp = data['issue']['updated_at'].replace("T", " / ")
         
-        text = "*Github activity alert!* \nType: New Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nThread Title: " + issueTitle + "\nThread updated by: " + issuer + "\nThread Comment: " + issueComment + "\n\n[Thread info](" + issueUrl + ")\nTimestamp: " + timeStamp
+        text = "*Github activity alert!* \nType: New Comment\nRepository: [" + repoName + "](" + repoUrl + ")\nThread Title: " + issueTitle + "\nThread updated by: " + issuer + "\nThread Comment: " + issueComment + "\n\n[Thread info](" + issueUrl + ")\nTimestamp: " + timeStamp[:-1]
      
     if event_type == "pull_request":
         pullStatus = data['action']
@@ -132,12 +132,12 @@ def messageFormattar(request_data,event_type):
         issueUrl = data['pull_request']['html_url']   
         
         if pullStatus == "opened":
-            timeStampOpened = data['pull_request']['created_at']
-            text = "*Github activity alert!* \nType: New Pull Request was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nPull Title: " + issueTitle + "\nPull created by: " + requester + "\n\n[Pull info](" + issueUrl + ")\nTimestamp: " + timeStampOpened
+            timeStampOpened = data['pull_request']['created_at'].replace("T", " / ")
+            text = "*Github activity alert!* \nType: New Pull Request was Created\nRepository: [" + repoName + "](" + repoUrl + ")\nPull Title: " + issueTitle + "\nPull created by: " + requester + "\n\n[Pull info](" + issueUrl + ")\nTimestamp: " + timeStampOpened[:-1]
         
         if pullStatus == "closed":
-            timeStampClosed = data['pull_request']['closed_at']
-            text = "*Github activity alert!* \nType: Old Pull Request was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nPull Title: " + issueTitle + "\nPull closed by: " + requester + "\n\n[Pull info](" + issueUrl + ")\nTimestamp: " + timeStampClosed
+            timeStampClosed = data['pull_request']['closed_at'].replace("T", " / ")
+            text = "*Github activity alert!* \nType: Old Pull Request was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nPull Title: " + issueTitle + "\nPull closed by: " + requester + "\n\n[Pull info](" + issueUrl + ")\nTimestamp: " + timeStampClosed[:-1]
         
     return text
     
