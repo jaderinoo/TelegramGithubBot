@@ -182,7 +182,6 @@ class tgBot(object):
                     file.write(strID + "\n")
                     print("Added")
                 
-
 if __name__ == '__main__':
     bot = tgBot()
     bot.main()
