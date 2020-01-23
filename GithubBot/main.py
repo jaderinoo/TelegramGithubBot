@@ -149,45 +149,40 @@ class tgBot(object):
         
         text = messageFormattar(request_data,event_type)
         
-        bot.sendMessage(self.chat_id, text, 'Markdown')
+        id_list = open("grouplist.txt").readlines()
+        
+        for i in id_list: 
+            bot.sendMessage(i, text, 'Markdown')
         return
 
-    def __init__(self):
-        super(tgBot, self).__init__()
-        
+    #Initializes the telegram bot and listens for a command
+    def main(self):
         #initialize updaters
         self.updater = Updater(keys.botKey)     
         self.dp = self.updater.dispatcher
         
-    def start(self,bot,update):     
-        
-        #save the chatID
-        self.chat_id = update.message.chat_id
-        
-        print("----------------------\nBot started at: ")
-        print(datetime.datetime.now())
-        print("----------------------")
-    
-        #Initialize message
-        message = "Bot has been initialized"
-        
-        #Sends the help message to the user
-        bot.sendMessage(self.chat_id, message)
-
-        #Run the flask instance
-        app.run(keys.flaskHost,keys.flaskPort)
-        
-        return 
- 
-    #Initializes the telegram bot and listens for a command
-    def main(self):
         #Creating Handler
-        self.dp.add_handler(CommandHandler('start',self.start))
+        self.dp.add_handler(CommandHandler('add',self.add))
         
         #Start polling
         self.updater.start_polling()
+        app.run(keys.flaskHost,keys.flaskPort)
         self.updater.idle()
     
+    def add(self,bot,update):
+        self.chat_id = update.message.chat_id
+        strID = str(update.message.chat_id)
+        print(strID)
+        
+        with open('grouplist.txt') as myfile:
+            if strID in myfile.read():
+                print("Already exists") 
+            else:           
+                with open("grouplist.txt", 'a+') as file:
+                    file.write(strID + "\n")
+                    print("Added")
+                
+
 if __name__ == '__main__':
     bot = tgBot()
     bot.main()
