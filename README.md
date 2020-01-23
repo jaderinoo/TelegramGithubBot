@@ -11,19 +11,18 @@ A bot that pulls info from github and pushes them to Telegram using python3.
 
 # Usage 
 - Download and install the Telegram.ext from https://github.com/python-telegram-bot/python-telegram-bot
+  - ```sudo pip3 install python-telegram-bot```
 
-- Install Flask with pip3
+- Install Flask ```sudo pip3 install flask```
 
 - (Optional) Install ngrok to recieve webhooks
-
+  - Run ```screen``` to allow ngrok usage in the background.
   - Run ```ngrok http (Port)```
+  - Make sure to start another screen for the main instance
   
+- Set the tunnel url on the Github webhooks page (Found in repo settings)
+
 - Move to directory and use: ```sudo nano keys.py``` (Replace required keys and add aditional tunnel information if necessary).
-
-- Run ```screen``` to allow for background usage.
-
-- Set the tunnel url on the Github webooks page (Found in repo settings)
-
   - This bot requires the use of Content type: appliation/json
 
 - Run ```sudo python3 main.py```
