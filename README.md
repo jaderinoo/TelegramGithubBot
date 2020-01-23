@@ -16,17 +16,17 @@ A bot that pulls info from github and pushes them to Telegram using python3.
 
 - (Optional) Install ngrok to recieve webhooks
 
-- Move to directory and use: sudo nano keys.py (Replace required keys and add aditional tunnel information if necessary).
+  - Run ```ngrok http (Port)```
+  
+- Move to directory and use: ```sudo nano keys.py``` (Replace required keys and add aditional tunnel information if necessary).
 
-- Run "screen" to allow for background usage.
-
-- Run ngrok http (Port)
+- Run ```screen``` to allow for background usage.
 
 - Set the tunnel url on the Github webooks page (Found in repo settings)
 
   - This bot requires the use of Content type: appliation/json
 
-- Run sudo python3 main.py
+- Run ```sudo python3 main.py```
 
 - The bot will then wait for the command /start from the desired chat
 
