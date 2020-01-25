@@ -27,12 +27,12 @@ A bot that pulls info from github and pushes them to Telegram using python3.
 
 - Run ```sudo python3 main.py```
 
-- The bot will then wait for the command /start from the desired chat
+- The bot will then wait for the command /add from the desired chat
 
-- Once the bot recieves the command it will start listening for Github webhooks
+- Once the bot recieves the command it will add the chat_Id to a list
 
 # Commands
-/Start - Starts the bot and searches for new tweets from the ID list
+/add - Adds the chat to the bots message list
 
 # Depiction
 ![alt text](Depiction.png)
