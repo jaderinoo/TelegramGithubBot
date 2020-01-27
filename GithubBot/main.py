@@ -73,7 +73,7 @@ def messageFormattar(request_data,event_type):
             timeStamp = data['repository']['updated_at'].replace("T", " / ")
             branchCloser = data['sender']['login']
             
-            text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp[:-6]
+            text = "*Github activity alert!* \nType: Old Branch was Closed\nRepository: [" + repoName + "](" + repoUrl + ")\nBranch name: " + branchName[11:] + "\nBranch closed by: " + branchCloser + "\n\nTimestamp: " + timeStamp[:-1]
     
     if event_type == "commit_comment":
         repoName = data['repository']['name']
@@ -181,6 +181,10 @@ class tgBot(object):
                 with open("grouplist.txt", 'a+') as file:
                     file.write(strID + "\n")
                     print("Added")
+                
+                
+                
+                
                 
 if __name__ == '__main__':
     bot = tgBot()
