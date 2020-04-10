@@ -1,0 +1,12 @@
+FROM python:3.8
+LABEL maintainer="TelegramGithubBot"
+
+ADD GithubBot/main.py /
+ADD GithubBot/keys.py /
+ADD GithubBot/grouplist.txt /
+
+RUN pip3 install flask
+RUN pip3 install python-telegram-bot
+RUN pip3 install pyngrok
+
+CMD [ "python3", "./main.py" ]
