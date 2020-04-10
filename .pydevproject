@@ -5,4 +5,10 @@
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/${PROJECT_DIR_NAME}/GithubBot</path>
 </pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>C:\Users\jader\AppData\Local\Programs\Python\Python37\Lib</path>
+<path>C:\Users\jader\AppData\Local\Programs\Python\Python37\Lib\site-packages</path>
+<path>C:\Users\jader\AppData\Local\Programs\Python\Python37\Lib\site-packages\pyngrok-2.1.3</path>
+<path>C:\Users\jader\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.8_qbz5n2kfra8p0\LocalCache\local-packages\Python38\site-packages</path>
+</pydev_pathproperty>
 </pydev_project>
