@@ -1,6 +1,8 @@
 # TelegramGithubBot
 A bot that pulls info from github and pushes them to Telegram using python3.
 
+~ also includes docker compatability! ~
+
 # Currently the bot sends:
 - Push
 - Pulls
@@ -15,10 +17,8 @@ A bot that pulls info from github and pushes them to Telegram using python3.
 
 - Install Flask ```sudo pip3 install flask```
 
-- (Optional) Install ngrok to recieve webhooks
-  - Run ```screen``` to allow ngrok usage in the background.
-  - Run ```ngrok http (Port)```
-  - Make sure to start another screen for the main instance
+- Install Pyngrok ```sudo pip3 install pyngrok```
+  - Enable / Disable Pyngrok, depending on your usage, in the keys.py file.
   
 - Set the tunnel url on the Github webhooks page (Found in repo settings)
 
