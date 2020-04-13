@@ -5,8 +5,6 @@ ADD GithubBot/main.py /
 ADD GithubBot/keys.py /
 ADD GithubBot/grouplist.txt /
 
-RUN pip3 install flask
-RUN pip3 install python-telegram-bot
-RUN pip3 install pyngrok
+RUN pip3 install -r requirements.txt
 
 CMD [ "python3", "./main.py" ]
