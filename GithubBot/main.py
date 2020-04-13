@@ -13,7 +13,6 @@ import keys
 currentDT = datetime.datetime.now()
 
 app = Flask(__name__, instance_relative_config=True)
-public_url = ngrok.connect(5000)
 
 @app.route("/", methods =['POST'])     
 def listener():
@@ -164,7 +163,9 @@ class tgBot(object):
         self.dp = self.updater.dispatcher
         
         #Post the payload URL
-        print("Payload URL: " + public_url)
+        if(keys.enablePyngrok == 1):
+            public_url = ngrok.connect(5000)
+            print("Payload URL: " + public_url)
         
         #Creating Handler
         self.dp.add_handler(CommandHandler('add',self.add))
