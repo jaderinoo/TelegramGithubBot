@@ -163,19 +163,18 @@ class tgBot(object):
     def main(self):
         
         #Setup File check
-        file = pathlib.Path('keys/mykey.yaml')
+        file = pathlib.Path('keys/mykey')
         if file.exists ():
             if(keys.botKey == ""):
                 with open(file) as f:
-                    doc = yaml.load(f, Loader=yaml.FullLoader)
-                    configBotKey = doc["data"]["mykey"]
+                    configBotKey = f.readline()
                     
                 #Set botKey to mapconfig key
                 keys.botKey = configBotKey
                 
                 #Because the key was grabbed from a mapconfig file; disable pyngrok
                 keys.enablePyngrok = 0
-                
+
         # Makes sure key is present before proceeding 
         if(keys.botKey == ""):
             print("No Key present, No map config found. aborting")
