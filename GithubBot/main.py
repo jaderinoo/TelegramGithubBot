@@ -165,13 +165,15 @@ class tgBot(object):
         #Setup File check
         file = pathlib.Path('keys/mykey')
         if file.exists ():
+            print("I exist")
             if(keys.botKey == ""):
+                print("I'm empty")
                 with open(file) as f:
                     configBotKey = f.readline()
                     
                 #Set botKey to mapconfig key
                 keys.botKey = configBotKey
-                
+                print(keys.botKey)
                 #Because the key was grabbed from a mapconfig file; disable pyngrok
                 keys.enablePyngrok = 0
 
