@@ -6,6 +6,8 @@ import telegram
 import json 
 import datetime
 import keys
+import pathlib
+import sys
 
 #Github webhook info grabber for Telegram
 #Written by Jad El-Khatib 
@@ -158,10 +160,29 @@ class tgBot(object):
 
     #Initializes the telegram bot and listens for a command
     def main(self):
+        
+        #Setup File check
+        file = pathlib.Path('/keys/mykey.txt')
+        if file.exists ():
+            if(keys.botKey == ""):
+                with open(file) as f:
+                    configBotKey = f.readline()
+                    
+                #Set botKey to mapconfig key
+                keys.botKey = configBotKey
+                
+                #Because the key was grabbed from a mapconfig file; disable pyngrok
+                keys.enablePyngrok = 0
+                
+        # Makes sure key is present before proceeding 
+        if(keys.botKey):
+            print("No Key present, No map config found. aborting")
+            sys.exit()
+            
         #initialize updaters
         self.updater = Updater(keys.botKey)     
         self.dp = self.updater.dispatcher
-        
+
         #Post the payload URL
         if(keys.enablePyngrok == 1):
             public_url = ngrok.connect(5000)

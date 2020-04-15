@@ -6,4 +6,4 @@ flaskHost = "0.0.0.0"
 flaskPort = "5000"
 
 #Enable Pyngrok?
-enablePyngrok = 1
+enablePyngrok = 0
