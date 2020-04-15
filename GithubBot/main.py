@@ -162,7 +162,7 @@ class tgBot(object):
     def main(self):
         
         #Setup File check
-        file = pathlib.Path('/keys/mykey.txt')
+        file = pathlib.Path('keys/mykey')
         if file.exists ():
             if(keys.botKey == ""):
                 with open(file) as f:
@@ -173,12 +173,13 @@ class tgBot(object):
                 
                 #Because the key was grabbed from a mapconfig file; disable pyngrok
                 keys.enablePyngrok = 0
-                
+   
         # Makes sure key is present before proceeding 
-        if(keys.botKey):
+        if(keys.botKey == ""):
             print("No Key present, No map config found. aborting")
             sys.exit()
             
+        
         #initialize updaters
         self.updater = Updater(keys.botKey)     
         self.dp = self.updater.dispatcher
